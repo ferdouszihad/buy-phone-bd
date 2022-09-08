@@ -12,7 +12,6 @@ const display = (phones) => {
   const phoneBox = document.getElementById("phone-container");
   phoneBox.textContent = ``;
   phones = phones.slice(0, 16);
-
   let errorMSg = document.getElementById("no-found-msg");
   console.log(errorMSg);
 
@@ -38,11 +37,24 @@ const display = (phones) => {
     `;
     phoneBox.appendChild(col);
   }
+  toggleLoader(false);
 };
 
 document.getElementById("search-btn").addEventListener("click", function () {
+  toggleLoader(true);
   const searchInput = document.getElementById("input-text");
   loadAPI(searchInput.value);
   searchInput.value = "";
+  toggleLoader(false);
 });
+
+const toggleLoader = (isLoading) => {
+  const loader = document.getElementById("loader");
+  if (isLoading) {
+    loader.classList.remove("d-none");
+  } else {
+    loader.classList.add("d-none");
+  }
+};
+
 loadAPI("iphone");
