@@ -45,7 +45,6 @@ document.getElementById("search-btn").addEventListener("click", function () {
   const searchInput = document.getElementById("input-text");
   loadAPI(searchInput.value);
   searchInput.value = "";
-  toggleLoader(false);
 });
 
 const toggleLoader = (isLoading) => {
