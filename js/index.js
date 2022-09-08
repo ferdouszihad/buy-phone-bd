@@ -29,7 +29,6 @@ const display = (phones, limit) => {
   }
 
   for (let phone of phones) {
-    console.log(phone);
     let col = document.createElement("div");
     col.classList.add("col");
     col.innerHTML = `
@@ -38,7 +37,7 @@ const display = (phones, limit) => {
         <div class="card-body">
             <h5 class="card-title">${phone.phone_name}</h5>
             <p class="card-text">brand : ${phone.brand}</p>
-            <button class="btn btn-primary" onclick=displayDetailof('${phone.slug}')>See Details</button>
+            <button class="btn btn-primary" onclick=loadDetailof('${phone.slug}') data-bs-toggle="modal" data-bs-target="#phoneDetailModal">See Details</button>
         </div>
     </div>
     `;
@@ -77,11 +76,88 @@ document.getElementById("show-btn").addEventListener("click", function () {
   doSearch();
 });
 
-const displayDetailof = async (id) => {
+const loadDetailof = async (id) => {
   const url = `https://openapi.programming-hero.com/api/phone/${id}`;
   const res = await fetch(url);
   const data = await res.json();
-  console.log(data.data);
+  displayDetailOf(data.data);
+};
+
+const displayDetailOf = (phone) => {
+  console.log(phone);
+  const title = document.getElementById("phoneDetailModalLabel");
+  title.innerText = `${phone.name}`;
+
+  let phoneBody = document.getElementById("modal-container");
+  phoneBody.innerHTML = `
+  <div class="row align-items-center">
+        <div class="col-4">
+            <img src=${phone.image} class="img-fluid" />
+
+        </div>
+        <div class="col-8">
+            <p>Release Date : ${
+              phone.releaseDate.length == 0 ? "Not Provided" : phone.releaseDate
+            } </p>
+            
+            <table class="table">
+            <tbody>
+                <tr>
+                <th colspan=2>Features</th>
+                
+                </tr>
+                <tr>
+                <th>Display</th>
+                <td>${phone.mainFeatures.displaySize}</td>
+            
+                </tr>
+                <tr>
+                <th>Storage</th>
+                <td>${phone.mainFeatures.storage}</td>
+                </tr>
+                <tr>
+                <th>Chipset</th>
+                <td>${phone.mainFeatures.chipSet}</td>
+                </tr>
+                <tr>
+                <th>Memory</th>
+                <td>${phone.mainFeatures.memory}</td>
+                </tr>
+                <tr>
+                <th>Sensors</th>
+                <td>${phone.mainFeatures.sensors.join(" , ")}</td>
+                </tr>
+            </tbody>
+            </table>
+            
+        </div>
+    </div>
+
+
+
+  `;
 };
 
 loadAPI("iphone");
+
+// {
+//     "mainFeatures": {
+//         "storage": "128GB/256GB/512GB storage, no card slot",
+//         "displaySize": "5.4 inches, 71.9 cm2 (~85.1% screen-to-body ratio)",
+//         "chipSet": "Apple A15 Bionic (5 nm)",
+//         "memory": "128GB 4GB RAM, 256GB 4GB RAM, 512GB 4GB RAM",
+//         "sensors": [
+//             "Face ID",
+//             "accelerometer",
+//             "gyro",
+//             "proximity",
+//             "compass",
+//             "barometer"
+//         ]
+//     },
+//     "slug": "apple_iphone_13_mini-11104",
+//     "name": "iPhone 13 mini",
+//     "releaseDate": "Released 2021, September 24",
+//     "brand": "Apple",
+//     "image": "https://fdn2.gsmarena.com/vv/bigpic/apple-iphone-13-mini.jpg"
+// }
